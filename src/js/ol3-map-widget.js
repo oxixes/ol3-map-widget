@@ -22,77 +22,9 @@
     "use strict";
 
     const internalUrl = function internalUrl(data) {
-        const url = document.createElement("a");
-        url.setAttribute('href', data);
+        const url = new URL(data, this.MashupPlatform.location);
         return url.href;
     };
-
-    const CORE_LAYERS = {
-        WIKIMEDIA: new ol.layer.Tile({
-            source: new ol.source.OSM({
-                url: "https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png"
-            })
-        }),
-        CARTODB_LIGHT: new ol.layer.Tile({
-            source: new ol.source.OSM({
-                url: "https://cartodb-basemaps-{1-4}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png"
-            })
-        }),
-        NOKIA_HERE_CARNAV_DAY: new ol.layer.Tile({
-            source: new ol.source.XYZ({
-                url: "https://{a-c}.maptile.maps.svc.ovi.com/maptiler/v2/maptile/newest/carnav.day/{z}/{x}/{y}/256/png",
-                attribution: 'Map Tiles &copy; ' + new Date().getFullYear() + ' ' + '<a target="_blank" href="http://developer.here.com">HERE</a>'
-            })
-        }),
-        NOKIA_HERE_NORMAL_DAY: new ol.layer.Tile({
-            source: new ol.source.XYZ({
-                url: "https://{a-c}.maptile.maps.svc.ovi.com/maptiler/v2/maptile/newest/normal.day/{z}/{x}/{y}/256/png",
-                attribution: 'Map Tiles &copy; ' + new Date().getFullYear() + ' ' + '<a target="_blank" href="http://developer.here.com">HERE</a>'
-            })
-        }),
-        NOKIA_HERE_NORMAL_DAY_TRANSIT: new ol.layer.Tile({
-            source: new ol.source.XYZ({
-                url: "https://{a-c}.maptile.maps.svc.ovi.com/maptiler/v2/maptile/newest/normal.day.transit/{z}/{x}/{y}/256/png",
-                attribution: 'Map Tiles &copy; ' + new Date().getFullYear() + ' ' + '<a target="_blank" href="http://developer.here.com">HERE</a>'
-            })
-        }),
-        NOKIA_HERE_NORMAL_NIGHT: new ol.layer.Tile({
-            source: new ol.source.XYZ({
-                url: "https://{a-c}.maptile.maps.svc.ovi.com/maptiler/v2/maptile/newest/normal.night/{z}/{x}/{y}/256/png",
-                attribution: 'Map Tiles &copy; ' + new Date().getFullYear() + ' ' + '<a target="_blank" href="http://developer.here.com">HERE</a>'
-            })
-        }),
-        NOKIA_HERE_PEDESTRIAN: new ol.layer.Tile({
-            source: new ol.source.XYZ({
-                url: "https://{a-c}.maptile.maps.svc.ovi.com/maptiler/v2/maptile/newest/pedestrian.day/{z}/{x}/{y}/256/png",
-                attribution: 'Map Tiles &copy; ' + new Date().getFullYear() + ' ' + '<a target="_blank" href="http://developer.here.com">HERE</a>'
-            })
-        }),
-        NOKIA_HERE_TERRAIN_DAY: new ol.layer.Tile({
-            source: new ol.source.XYZ({
-                url: "https://{a-c}.maptile.maps.svc.ovi.com/maptiler/v2/maptile/newest/terrain.day/{z}/{x}/{y}/256/png",
-                attribution: 'Map Tiles &copy; ' + new Date().getFullYear() + ' ' + '<a target="_blank" href="http://developer.here.com">HERE</a>'
-            })
-        }),
-        NOKIA_HERE_SATELLITE_DAY: new ol.layer.Tile({
-            source: new ol.source.XYZ({
-                url: "https://{a-c}.maptile.maps.svc.ovi.com/maptiler/v2/maptile/newest/satellite.day/{z}/{x}/{y}/256/png",
-                attribution: 'Map Tiles &copy; ' + new Date().getFullYear() + ' ' + '<a target="_blank" href="http://developer.here.com">HERE</a>'
-            })
-        }),
-        NOKIA_HERE_HIBRID_DAY: new ol.layer.Tile({
-            source: new ol.source.XYZ({
-                url: "https://{a-c}.maptile.maps.svc.ovi.com/maptiler/v2/maptile/newest/hibrid.day/{z}/{x}/{y}/256/png",
-                attribution: 'Map Tiles &copy; ' + new Date().getFullYear() + ' ' + '<a target="_blank" href="http://developer.here.com">HERE</a>'
-            })
-        }),
-        OSM: new ol.layer.Tile({
-            source: new ol.source.OSM()
-        }),
-    };
-    CORE_LAYERS.GOOGLE_STANDARD = CORE_LAYERS.MAPQUEST_ROAD;
-    CORE_LAYERS.GOOGLE_HYBRID = CORE_LAYERS.MAPQUEST_HYBRID;
-    CORE_LAYERS.GOOGLE_SATELLITE = CORE_LAYERS.MAPQUEST_SATELLITE;
 
     const create_popover = function create_popover(feature) {
         // The feature has content to be used on a popover
@@ -164,7 +96,7 @@
                 anchorXUnits: 'fraction',
                 anchorYUnits: 'pixels',
                 opacity: 0.75,
-                src: internalUrl('images/icon.png')
+                src: internalUrl.call(this, 'images/icon.png')
             });
         }
 
@@ -437,6 +369,73 @@
         this.popover = null;
         this.layers = {};
         this.centering = false;
+
+        this.CORE_LAYERS = {
+            WIKIMEDIA: new ol.layer.Tile({
+                source: new ol.source.OSM({
+                    url: "https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png"
+                })
+            }),
+            CARTODB_LIGHT: new ol.layer.Tile({
+                source: new ol.source.OSM({
+                    url: "https://cartodb-basemaps-{1-4}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png"
+                })
+            }),
+            NOKIA_HERE_CARNAV_DAY: new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    url: "https://{a-c}.maptile.maps.svc.ovi.com/maptiler/v2/maptile/newest/carnav.day/{z}/{x}/{y}/256/png",
+                    attribution: 'Map Tiles &copy; ' + new Date().getFullYear() + ' ' + '<a target="_blank" href="http://developer.here.com">HERE</a>'
+                })
+            }),
+            NOKIA_HERE_NORMAL_DAY: new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    url: "https://{a-c}.maptile.maps.svc.ovi.com/maptiler/v2/maptile/newest/normal.day/{z}/{x}/{y}/256/png",
+                    attribution: 'Map Tiles &copy; ' + new Date().getFullYear() + ' ' + '<a target="_blank" href="http://developer.here.com">HERE</a>'
+                })
+            }),
+            NOKIA_HERE_NORMAL_DAY_TRANSIT: new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    url: "https://{a-c}.maptile.maps.svc.ovi.com/maptiler/v2/maptile/newest/normal.day.transit/{z}/{x}/{y}/256/png",
+                    attribution: 'Map Tiles &copy; ' + new Date().getFullYear() + ' ' + '<a target="_blank" href="http://developer.here.com">HERE</a>'
+                })
+            }),
+            NOKIA_HERE_NORMAL_NIGHT: new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    url: "https://{a-c}.maptile.maps.svc.ovi.com/maptiler/v2/maptile/newest/normal.night/{z}/{x}/{y}/256/png",
+                    attribution: 'Map Tiles &copy; ' + new Date().getFullYear() + ' ' + '<a target="_blank" href="http://developer.here.com">HERE</a>'
+                })
+            }),
+            NOKIA_HERE_PEDESTRIAN: new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    url: "https://{a-c}.maptile.maps.svc.ovi.com/maptiler/v2/maptile/newest/pedestrian.day/{z}/{x}/{y}/256/png",
+                    attribution: 'Map Tiles &copy; ' + new Date().getFullYear() + ' ' + '<a target="_blank" href="http://developer.here.com">HERE</a>'
+                })
+            }),
+            NOKIA_HERE_TERRAIN_DAY: new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    url: "https://{a-c}.maptile.maps.svc.ovi.com/maptiler/v2/maptile/newest/terrain.day/{z}/{x}/{y}/256/png",
+                    attribution: 'Map Tiles &copy; ' + new Date().getFullYear() + ' ' + '<a target="_blank" href="http://developer.here.com">HERE</a>'
+                })
+            }),
+            NOKIA_HERE_SATELLITE_DAY: new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    url: "https://{a-c}.maptile.maps.svc.ovi.com/maptiler/v2/maptile/newest/satellite.day/{z}/{x}/{y}/256/png",
+                    attribution: 'Map Tiles &copy; ' + new Date().getFullYear() + ' ' + '<a target="_blank" href="http://developer.here.com">HERE</a>'
+                })
+            }),
+            NOKIA_HERE_HIBRID_DAY: new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    url: "https://{a-c}.maptile.maps.svc.ovi.com/maptiler/v2/maptile/newest/hibrid.day/{z}/{x}/{y}/256/png",
+                    attribution: 'Map Tiles &copy; ' + new Date().getFullYear() + ' ' + '<a target="_blank" href="http://developer.here.com">HERE</a>'
+                })
+            }),
+            OSM: new ol.layer.Tile({
+                source: new ol.source.OSM()
+            }),
+        };
+        this.CORE_LAYERS.GOOGLE_STANDARD = this.CORE_LAYERS.MAPQUEST_ROAD;
+        this.CORE_LAYERS.GOOGLE_HYBRID = this.CORE_LAYERS.MAPQUEST_HYBRID;
+        this.CORE_LAYERS.GOOGLE_SATELLITE = this.CORE_LAYERS.MAPQUEST_SATELLITE;
     };
 
     Widget.prototype.init = function init() {
@@ -520,7 +519,7 @@
         update_ui_buttons({editing: this.MashupPlatform.mashup.context.get("editing")});
 
         DEFAULT_MARKER = build_basic_style.call(this);
-        this.base_layer = CORE_LAYERS.OSM;
+        this.base_layer = this.CORE_LAYERS.OSM;
         let initialCenter = this.MashupPlatform.prefs.get("initialCenter").split(",").map(Number);
         if (initialCenter.length != 2 || !Number.isFinite(initialCenter[0]) || !Number.isFinite(initialCenter[1])) {
             initialCenter = [0, 0];
@@ -1275,12 +1274,12 @@
     };
 
     Widget.prototype.setBaseLayer = function setBaseLayer(layer_info) {
-        if (layer_info.id == null || !(layer_info.id in CORE_LAYERS)) {
+        if (layer_info.id == null || !(layer_info.id in this.CORE_LAYERS)) {
             throw new this.MashupPlatform.wiring.EndpointValueError('Invalid layer id');
         }
 
         this.map.removeLayer(this.base_layer);
-        this.base_layer = CORE_LAYERS[layer_info.id];
+        this.base_layer = this.CORE_LAYERS[layer_info.id];
         this.map.getLayers().insertAt(0, this.base_layer);
     };
 

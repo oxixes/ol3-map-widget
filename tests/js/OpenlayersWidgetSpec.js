@@ -62,8 +62,10 @@
                     'useclustering': false
                 },
                 inputs: ['layerInfo'],
-                outputs: ['poiListOutput', 'poiOutput']
+                outputs: ['poiListOutput', 'poiOutput'],
             });
+
+            window.MashupPlatform.location = window.location.href;
 
             const container = document.createElement('div');
             container.id = 'container';
